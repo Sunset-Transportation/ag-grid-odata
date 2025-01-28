@@ -1113,11 +1113,18 @@ export class OdataProvider implements OdataProviderOptions {
             filter.push(colFilter)
           }
         } else {
-          const condition1 = me.getFilterOdata(colName, col.conditions[0])
-          const condition2 = me.getFilterOdata(colName, col.conditions[1])
-          if (condition1 && condition2) {
-            colFilter = `(${condition1} ${col.operator.toLowerCase()} ${condition2})`
-            filter.push(colFilter)
+          if (col.condition1 && col.condition2) {
+            const condition1 = me.getFilterOdata(colName, col.condition1)
+            const condition2 = me.getFilterOdata(colName, col.condition2)
+            if (condition1 && condition2) {
+              colFilter = `(${condition1} ${col.operator.toLowerCase()} ${condition2})`
+              filter.push(colFilter)
+            }
+          } else {
+            const conditions = col.conditions
+              .map((x) => me.getFilterOdata(colName, x))
+              .join(` ${col.operator.toLowerCase()} `)
+            filter.push('(' + conditions + ')')
           }
         }
       }
