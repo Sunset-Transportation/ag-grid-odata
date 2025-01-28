@@ -151,12 +151,12 @@ export class OdataProvider implements OdataProviderOptions {
    * Name of field contain count of record results in grouping odata query
    * @default childCount
    */
-  groupCountFieldName: string = 'childCount'
+  groupCountFieldName = 'childCount'
   /**
    * Use in odata build query
    * @default false
    */
-  isCaseSensitiveStringFilter: boolean = false
+  isCaseSensitiveStringFilter = false
   /**
    * Callback for extend odata query options for implement user logic
    */
@@ -452,7 +452,7 @@ export class OdataProvider implements OdataProviderOptions {
       path['$select'] = options.select.join(',')
     }
 
-    let query: string = ''
+    let query = ''
     if (Object.keys(path).length > 0) {
       query = '?' + new URLSearchParams(path).toString()
     }
@@ -525,7 +525,11 @@ export class OdataProvider implements OdataProviderOptions {
           )
         }
         case 'date':
-          if (
+          if (col.type == 'blank') {
+            return me.odataOperator.blank(colName)
+          } else if (col.type == 'notBlank') {
+            return me.odataOperator.notBlank(colName)
+          } else if (
             col.dateFrom != null &&
             me.toDateTime(col.dateFrom) != null &&
             (col.dateTo == null ||
@@ -1109,8 +1113,8 @@ export class OdataProvider implements OdataProviderOptions {
             filter.push(colFilter)
           }
         } else {
-          const condition1 = me.getFilterOdata(colName, col.condition1)
-          const condition2 = me.getFilterOdata(colName, col.condition2)
+          const condition1 = me.getFilterOdata(colName, col.conditions[0])
+          const condition2 = me.getFilterOdata(colName, col.conditions[1])
           if (condition1 && condition2) {
             colFilter = `(${condition1} ${col.operator.toLowerCase()} ${condition2})`
             filter.push(colFilter)
