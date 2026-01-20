@@ -21,3 +21,19 @@ export declare class PivotResultDat{
     aggCols: any[]
     secondaryColDefs:ColumnVO[]
 }
+
+export interface OdataQueryOptionStrings {
+    $orderby?: string;
+    $filter?: string;
+    $expand?: string;
+    $select?: string;
+    $skip?: number;
+    $top?: number;
+    $count?: boolean;
+    $apply?: string;
+}
+
+export interface ApiCallArgs {
+    query: string;
+    options: OdataQueryOptionStrings;
+}
